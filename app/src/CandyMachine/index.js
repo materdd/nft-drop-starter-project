@@ -92,15 +92,19 @@ const CandyMachine = ({ walletAddress }) => {
   const mintToken = async () => {
     const mint = web3.Keypair.generate();
 
+    console.log('aaa')
+
     if (!mint || !candyMachine?.state) return;
 
     const userTokenAccountAddress = (
       await getAtaForMint(mint.publicKey, walletAddress.publicKey)
     )[0];
+
   
     const userPayingAccountAddress = candyMachine.state.tokenMint
       ? (await getAtaForMint(candyMachine.state.tokenMint, walletAddress.publicKey))[0]
       : walletAddress.publicKey;
+
   
     const candyMachineAddress = candyMachine.id;
     const remainingAccounts = [];
@@ -255,6 +259,7 @@ const CandyMachine = ({ walletAddress }) => {
         ),
       );
     }
+    
     const metadataAddress = await getMetadata(mint.publicKey);
     const masterEdition = await getMasterEdition(mint.publicKey);
   
@@ -336,9 +341,14 @@ const CandyMachine = ({ walletAddress }) => {
     (!candyMachine.data.goLiveDate ||
     candyMachine.data.goLiveDate.toNumber() > new Date().getTime() / 1000);
 
+    
     const goLiveDateTimeString = `${new Date(
       goLiveData * 1000
     ).toUTCString()}`
+    
+    //const goLiveDateTimeString = `${new Date(
+    //  goLiveData * 1000
+    //).toLocaleDateString()} @ ${new Date(goLiveData * 1000).toLocaleTimeString()}`;
 
     // このデータをstateに追加してレンダリングする
     setCandyMachine({
@@ -399,6 +409,7 @@ const CandyMachine = ({ walletAddress }) => {
   useEffect(() => {
     getCandyMachineState();
   }, []);
+  
 
   return (
     candyMachine && candyMachine.state && (
